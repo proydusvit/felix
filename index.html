@@ -132,20 +132,20 @@
     .stars{
       position: absolute;
       top: 20px;
-      right: 210px;
+      right: 310px;
       z-index: 5;
     }
     .starssecond{
       position: absolute;
       top: 240px;
-      right: 100px;
+      right: 120px;
       z-index: 5;
     }
 
     .star-link{
       display: block;
-      width: 30vw;
-      height: 30vh;
+   width: 280px;
+      height: 280px;
       background-image: url("./img/star.png");
       background-size: contain;
       background-repeat: no-repeat;
@@ -210,20 +210,18 @@
     }
 
     /* ====== Tablet ≤1024px ====== */
-    @media (max-width: 1024px){
+    @media (max-width: 1279px){
       .family{
-        left: 78%;
-        top: 38%;
-        width: 48vw;
+      display: none;
       }
       .picture{
         left: 18%;
         top: 14%;
         width: 28vw;
       }
-      .felix{ width: 30vw; }
-      .stars{ top: 16px; right: 120px; }
-      .starssecond{ top: 200px; right: 24px; }
+      .felix{ width: 40vw; }
+      .stars{ top: 70px; right: 120px; }
+      .starssecond{ top: 290px; right: 24px; }
       .star-link{  width: 30vw;
       height: 30vh; }
       .star-text{ font-size: 22px; }
@@ -231,7 +229,7 @@
     }
 
     /* ====== Mobile / Small tablet ≤768px ====== */
-    @media (max-width: 768px){
+    @media (max-width: 767px){
       /* Родину переносимо вниз по центру, щоб не заважала заголовку */
       .family{
        display: none;
