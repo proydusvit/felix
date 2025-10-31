@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Фелікс Редька — Стендап без мату</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Neucha&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg-base: #B45E77;
+      --tile-size: 320px;
+      --text-top:  #EDE6FF;
+      --text-main: #FFFCEB;
+      --text-sub:  #D9A8FF;
+    }
+
+    *{ box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; }
+    body { font-family: "Neucha", system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
+
+    .hero{
+      position: relative;
+      min-height: 100vh;
+      overflow: hidden;
+      background-color: var(--bg-base);
+      background-image: url("./img/image.png"); /* тайл-текстура, можна прибрати */
+      background-repeat: repeat;
+      background-size: var(--tile-size) auto;
+      background-position: center;
+      background-blend-mode: multiply;
+    }
+
+    .overlay{
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(120% 80% at 50% 30%, rgba(0,0,0,0), rgba(0,0,0,.18));
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* Родина (декор позаду) */
+    .family{
+      position: absolute;
+      left: 83%;
+      top: 35%;
+      transform: translateX(-50%);
+      width: 40vw;
+      max-height: 95vh;
+      height: auto;
+      z-index: 2;
+      pointer-events: none;
+      filter: drop-shadow(0 10px 18px rgba(0,0,0,.22));
+      animation: familySway 10s ease-in-out infinite;
+      transform-origin: 50% 10%;
+    }
+
+    /* Картина */
+    .picture{
+      position: absolute;
+      left: 20%;
+      top: 15%;
+      transform: translateX(-50%) rotate(-1deg);
+      width: 25vw;
+      max-height: 50vh;
+      height: auto;
+      z-index: 2;
+      pointer-events: none;
+      filter: drop-shadow(0 6px 14px rgba(0,0,0,.18));
+      transform-origin: 50% 0%;
+      animation: frameSwing 8s ease-in-out infinite;
+    }
+
+    /* Фелікс (збільшення/зменшення) */
+    .felix{
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      transform: translateX(-50%) scale(1);
+      transform-origin: 50% 100%;
+      width: 320px;
+      height: auto;
+      z-index: 3;
+      pointer-events: none;
+      filter: drop-shadow(0 14px 24px rgba(0,0,0,.35));
+      animation: felixGrow 5.5s ease-in-out infinite;
+    }
+
+    /* Верхній текст */
+    .content{
+      position: relative;
+      z-index: 4;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: calc(16px + env(safe-area-inset-top, 0px)) 16px 24px;
+      margin-inline: auto;
+      max-width: 1100px;
+    }
+    .content h2{
+      margin: 10px 0 6px;
+      font-size: clamp(14px, 2.2vw, 18px);
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--text-top);
+      text-shadow: 0 2px 4px rgba(0,0,0,.35);
+    }
+    .content h1{
+      margin: 0 0 6px;
+      font-size: clamp(28px, 6.6vw, 72px);
+      line-height: 1.05;
+      text-transform: uppercase;
+      color: var(--text-main);
+      text-shadow: 0 3px 8px rgba(0,0,0,.5);
+      letter-spacing: .02em;
+      white-space: nowrap;
+    }
+    .content p{
+      margin: 0;
+      font-size: clamp(14px, 3vw, 28px);
+      color: var(--text-sub);
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      text-shadow: 0 2px 6px rgba(0,0,0,.45);
+    }
+
+    /* ЗІРКИ-кнопки */
+    .stars{
+      position: absolute;
+      top: 20px;
+      right: 210px;
+      z-index: 5;
+    }
+    .starssecond{
+      position: absolute;
+      top: 240px;
+      right: 100px;
+      z-index: 5;
+    }
+
+    .star-link{
+      display: block;
+      width: 30vw;
+      height: 30vh;
+      background-image: url("./img/star.png");
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      text-decoration: none;
+      position: relative;
+      transition: transform .2s ease;
+      animation: pulse 2.2s ease-in-out infinite;
+      filter: drop-shadow(0 8px 18px rgba(0,0,0,.25));
+    }
+    .starssecond .star-link{ animation-delay: .9s; }
+
+    .star-link:hover{
+      transform: scale(1.06) rotate(2deg);
+      animation-play-state: paused;
+    }
+
+    .star-text{
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: #111;
+      font-weight: 800;
+      font-size: 26px;
+      text-align: center;
+      width: 80%;
+      line-height: 1.1;
+      letter-spacing: .06em;
+      text-shadow: 0 1px 0 rgba(255,255,255,.5);
+      animation: textPop 2.2s ease-in-out infinite;
+    }
+    .starssecond .star-text{ animation-delay: .9s; }
+
+    /* ===== Анімації ===== */
+    @keyframes pulse{
+      0%, 100% { transform: scale(1) rotate(-1deg); filter: drop-shadow(0 8px 18px rgba(0,0,0,.22)); }
+      50%      { transform: scale(1.08) rotate(1deg);  filter: drop-shadow(0 12px 26px rgba(0,0,0,.32)); }
+    }
+    @keyframes textPop{
+      0%, 100% { transform: translate(-50%, -50%) scale(1); }
+      50%      { transform: translate(-50%, -50%) scale(1.06); }
+    }
+    @keyframes felixGrow{
+      0%   { transform: translateX(-50%) scale(1); }
+      50%  { transform: translateX(-50%) scale(1.15); }
+      100% { transform: translateX(-50%) scale(1); }
+    }
+    @keyframes frameSwing{
+      0%, 100% { transform: translateX(-50%) rotate(-1deg); }
+      50%      { transform: translateX(-50%) rotate(2deg); }
+    }
+    @keyframes familySway{
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50%      { transform: translateX(-50%) translateY(4px); }
+    }
+
+    /* ===== Accessibility ===== */
+    @media (prefers-reduced-motion: reduce){
+      .star-link, .star-text, .felix, .picture, .family{ animation: none !important; }
+      .star-link{ transition: none; }
+    }
+
+    /* ====== Tablet ≤1024px ====== */
+    @media (max-width: 1024px){
+      .family{
+        left: 78%;
+        top: 38%;
+        width: 48vw;
+      }
+      .picture{
+        left: 18%;
+        top: 14%;
+        width: 28vw;
+      }
+      .felix{ width: 30vw; }
+      .stars{ top: 16px; right: 120px; }
+      .starssecond{ top: 200px; right: 24px; }
+      .star-link{  width: 30vw;
+      height: 30vh; }
+      .star-text{ font-size: 22px; }
+      .content h1{ white-space: normal; line-height: 1.08; }
+    }
+
+    /* ====== Mobile / Small tablet ≤768px ====== */
+    @media (max-width: 768px){
+      /* Родину переносимо вниз по центру, щоб не заважала заголовку */
+      .family{
+       display: none;
+      }
+      .picture{
+        left: 16%;
+        top: 17%;
+        width: 44vw;
+      }
+      .felix{ width: 64vw; }
+
+      /* Зірки менші і ближче до краю */
+      .stars{ right: 10px; top: 60px; }
+      .starssecond{ right: 14px; top: 170px; }
+      .star-link{  width: 30vw;
+      height: 30vh;}
+      .star-text{ font-size: 12px; }
+
+      .content h1{ white-space: normal; line-height: 1.08; }
+    }
+  </style>
+</head>
+<body>
+  <section class="hero">
+    <div class="overlay"></div>
+
+    <!-- Зірки-посилання -->
+    <div class="stars">
+      <a href="https://example.com/1" class="star-link" target="_blank" aria-label="Купити квиток">
+        <span class="star-text">Купити<br> доступ</span>
+      </a>
+    </div>
+    <div class="starssecond">
+      <a href="https://example.com/2" class="star-link" target="_blank" aria-label="Купити квиток з бонусом">
+        <span class="star-text">Купити<br> доступ<br> з бонусом</span>
+      </a>
+    </div>
+
+    <!-- Декорації -->
+    <img class="family"  src="./img/back-Photoroom.png" alt="Родина на дивані" />
+    <img class="picture" src="./img/picture.png"      alt="Картина на стіні" />
+
+    <!-- Фелікс попереду -->
+    <img class="felix" src="./img/felix.png" alt="Фелікс Редька" />
+
+    <!-- Верхній заголовок -->
+    <div class="content">
+      <h2>Фелікс Редька</h2>
+      <h1>Стендап без мату</h1>
+      <p>Для всієї родини</p>
+    </div>
+  </section>
+</body>
+</html>
